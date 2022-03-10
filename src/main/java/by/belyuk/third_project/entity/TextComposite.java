@@ -22,21 +22,6 @@ public class TextComposite implements Component {
   }
 
   @Override
-  public void print() {
-    for (Component component : textElements) {
-      System.out.println(component);
-    }
-  }
-
-  public List<Component> getTextElements() {
-    return textElements;
-  }
-
-  public TextElementType getTextElementType() {
-    return textElementType;
-  }
-
-  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
@@ -55,9 +40,11 @@ public class TextComposite implements Component {
 
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder("TextComposite{ \n");
+    final StringBuilder sb = new StringBuilder();
     for (Component element : textElements) {
-      sb.append(element.toString() + "\n\n");
+      sb.append(textElementType.getPrefix())
+          .append(element.toString())
+          .append(textElementType.getPostfix());
     }
     return sb.toString();
   }

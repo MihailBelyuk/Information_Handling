@@ -2,28 +2,33 @@ package by.belyuk.third_project.parser;
 
 import by.belyuk.third_project.entity.Component;
 import by.belyuk.third_project.entity.TextComposite;
-import by.belyuk.third_project.entity.TextElement;
-import by.belyuk.third_project.exception.CustomException;
 import by.belyuk.third_project.entity.TextElementType;
+import by.belyuk.third_project.exception.CustomException;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.List;
-
-public class TextToParagraphParser {
+public class ParagraphParser extends TextParser {
   private static final Logger logger = LogManager.getLogger();
   private static final String PARAGRAPH_REGEXP = "\\s{4}";
 
-  public void parse(String text, TextComposite composite) throws CustomException {
-    if (composite == null) {
+  public ParagraphParser() {
+    this.nextParser = new SentenceParser();
+  }
+
+  @Override
+  public void parse(String text, Component component) throws CustomException {
+    if (component == null) {
       logger.log(Level.ERROR, "Component from parameters is null");
       throw new CustomException("Component from parameters is null");
     }
-    List<String> paragraphs = List.of(text.strip().split(PARAGRAPH_REGEXP));
+    String[] paragraphs = text.strip().split(PARAGRAPH_REGEXP);
     for (String paragraph : paragraphs) {
-      Component component = new TextElement(TextElementType.PARAGRAPH,paragraph);
-      composite.add(component);
+      if (!paragraph.isEmpty()) {
+        Component paragraphComponent = new TextComposite(TextElementType.PARAGRAPH);
+        component.add(paragraphComponent);
+        nextParser.parse(paragraph, paragraphComponent);
+      }
     }
   }
 }

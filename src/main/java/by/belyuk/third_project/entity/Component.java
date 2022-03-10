@@ -6,5 +6,4 @@ public interface Component {
 
   void remove(Component component);
 
-  void print();
 }
